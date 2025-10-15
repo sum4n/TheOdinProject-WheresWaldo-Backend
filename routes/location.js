@@ -4,7 +4,7 @@ const router = Router();
 const locationController = require("../controller/locationController");
 
 router.get(
-  "/characters/:characterName",
+  "/check-location/:characterName",
   locationController.checkCharacterLocation
 );
 
