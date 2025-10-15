@@ -18,18 +18,20 @@ exports.getCharacter = async (req, res) => {
   // click is on the character location box
   if (character && clickX >= character.xLeft && clickX <= character.xRight) {
     if (clickY >= character.yTop && clickY <= character.yBottom) {
-      res
-        .status(200)
-        .json({ success: true, message: `${character.name} found`, character });
+      res.status(200).json({
+        success: true,
+        message: `${character.name} found`,
+        name: character.name,
+      });
     }
   }
 
   // If the click is not on the character box
   if (character) {
-    res.statu(200).json({
+    res.status(200).json({
       success: false,
       message: `${character.name} not found`,
-      character,
+      name: character.name,
     });
   } else {
     res.status(200).json({ success: false, message: "Wrong search" });
