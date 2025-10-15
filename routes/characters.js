@@ -1,13 +1,13 @@
 const { Router } = require("express");
 const router = Router();
 
-const locationController = require("../controller/characterController");
+const characterController = require("../controller/characterController");
 
-router.get("/characters", locationController.getAllCharacterNames);
+router.get("/characters", characterController.getAllCharacterNames);
 
 router.get(
   "/characters/check/:characterName",
-  locationController.checkCharacterLocation
+  characterController.checkCharacterLocation
 );
 
 module.exports = router;
