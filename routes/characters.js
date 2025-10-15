@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const router = Router();
 
-const locationController = require("../controller/locationController");
+const locationController = require("../controller/characterController");
 
 router.get(
   "/check-location/:characterName",

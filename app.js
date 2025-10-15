@@ -1,9 +1,9 @@
 const express = require("express");
 const app = express();
 
-const locationRouter = require("./routes/location");
+const characterRouter = require("./routes/characters");
 
-app.use("/api", locationRouter);
+app.use("/api", characterRouter);
 
 const PORT = process.env.PORT || 3000;
 
