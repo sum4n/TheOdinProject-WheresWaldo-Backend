@@ -19,19 +19,19 @@ exports.getCharacter = async (req, res) => {
   if (character && clickX >= character.xLeft && clickX <= character.xRight) {
     if (clickY >= character.yTop && clickY <= character.yBottom) {
       res
-        .status(201)
+        .status(200)
         .json({ success: true, message: `${character.name} found`, character });
     }
   }
 
   // If the click is not on the character box
   if (character) {
-    res.json({
+    res.statu(200).json({
       success: false,
       message: `${character.name} not found`,
       character,
     });
   } else {
-    res.status(404).json({ success: false, message: "Wrong search" });
+    res.status(200).json({ success: false, message: "Wrong search" });
   }
 };
