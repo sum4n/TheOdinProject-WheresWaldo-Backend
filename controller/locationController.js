@@ -2,7 +2,7 @@ const { PrismaClient } = require("../generated/prisma");
 
 const prisma = new PrismaClient();
 
-exports.getCharacter = async (req, res) => {
+exports.checkCharacterLocation = async (req, res) => {
   // get click position form query parameters
   const { x: clickX, y: clickY } = req.query;
   console.log({ clickX, clickY });

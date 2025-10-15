@@ -3,6 +3,9 @@ const router = Router();
 
 const locationController = require("../controller/locationController");
 
-router.get("/characters/:characterName", locationController.getCharacter);
+router.get(
+  "/characters/:characterName",
+  locationController.checkCharacterLocation
+);
 
 module.exports = router;
