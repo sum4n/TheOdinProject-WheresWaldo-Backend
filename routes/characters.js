@@ -3,8 +3,10 @@ const router = Router();
 
 const locationController = require("../controller/characterController");
 
+router.get("/characters", locationController.getAllCharacterNames);
+
 router.get(
-  "/check-location/:characterName",
+  "/characters/check/:characterName",
   locationController.checkCharacterLocation
 );
 
