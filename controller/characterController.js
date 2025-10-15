@@ -2,6 +2,19 @@ const { PrismaClient } = require("../generated/prisma");
 
 const prisma = new PrismaClient();
 
+exports.getAllCharacterNames = async (req, res) => {
+  const allCharacterNames = await prisma.character.findMany({
+    select: { name: true },
+  });
+
+  const nameList = [];
+  allCharacterNames.forEach((name) => {
+    nameList.push(name.name);
+  });
+
+  res.status(200).json(nameList);
+};
+
 exports.checkCharacterLocation = async (req, res) => {
   // get click position form query parameters
   const { x: clickX, y: clickY } = req.query;
