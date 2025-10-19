@@ -15,10 +15,20 @@ datasource db {
 }
 
 model Character {
-  id      Int    @id @default(autoincrement())
-  name    String @unique
-  xLeft   Int
-  xRight  Int
-  yTop    Int
-  yBottom Int
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  xLeft       Int
+  xRight      Int
+  yTop        Int
+  yBottom     Int
+  imgUrl      String     @unique
+  Gameboard   Gameboard? @relation(fields: [gameboardId], references: [id])
+  gameboardId Int?
+}
+
+model Gameboard {
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  imgUrl     String      @unique
+  characters Character[]
 }
