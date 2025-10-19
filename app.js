@@ -2,8 +2,10 @@ const express = require("express");
 const app = express();
 
 const characterRouter = require("./routes/characters");
+const assetRouter = require("./routes/asset");
 
 app.use("/api", characterRouter);
+app.use("/api", assetRouter);
 
 const PORT = process.env.PORT || 3000;
 
