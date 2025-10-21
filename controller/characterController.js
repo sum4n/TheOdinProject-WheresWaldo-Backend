@@ -16,9 +16,11 @@ exports.getAllCharacterNames = async (req, res) => {
 };
 
 exports.checkCharacterLocation = async (req, res) => {
+  // add timer here. don't wait for server check. if correct use it to find time elapsed.
+  const currentTime = Date.now();
   // get click position form query parameters
   const { x: clickX, y: clickY } = req.query;
-  console.log({ clickX, clickY });
+  // console.log({ clickX, clickY });
 
   // get the character name from path parameter
   const characterName = req.params.characterName;
@@ -27,26 +29,42 @@ exports.checkCharacterLocation = async (req, res) => {
     where: { name: characterName },
   });
 
-  // check if the click location is within the character box OR
-  // click is on the character location box
-  if (character && clickX >= character.xLeft && clickX <= character.xRight) {
-    if (clickY >= character.yTop && clickY <= character.yBottom) {
-      res.status(200).json({
-        success: true,
-        message: `${character.name} found`,
-        name: character.name,
-      });
-    }
+  // character does not exists
+  if (!character) {
+    return res.status(404).json({
+      success: false,
+      message: `Chracter ${characterName} not found`,
+    });
   }
 
-  // If the click is not on the character box
-  if (character) {
+  // check if the click location is within the character box OR
+  // click is on the character location box
+  if (
+    character &&
+    clickX >= character.xLeft &&
+    clickX <= character.xRight &&
+    clickY >= character.yTop &&
+    clickY <= character.yBottom
+  ) {
+    // decrease character count on a chracter found.
+    req.session.characterCount -= 1;
+    // console.log(req.session);
+
+    res.status(200).json({
+      success: true,
+      message: `${character.name} found`,
+      name: character.name,
+      gameEnd: req.session.characterCount == 0, // when all characters are found
+      timeElapsed:
+        req.session.characterCount == 0
+          ? ((currentTime - req.session.startTime) / 1000).toFixed(2)
+          : null,
+    });
+  } else {
     res.status(200).json({
       success: false,
       message: `${character.name} not found`,
       name: character.name,
     });
-  } else {
-    res.status(200).json({ success: false, message: "Wrong search" });
   }
 };
