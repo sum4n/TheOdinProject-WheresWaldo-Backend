@@ -32,3 +32,10 @@ model Gameboard {
   imgUrl     String      @unique
   characters Character[]
 }
+
+model Score {
+  id       Int      @id @default(autoincrement())
+  username String
+  time     String
+  cratedAt DateTime @default(now())
+}
