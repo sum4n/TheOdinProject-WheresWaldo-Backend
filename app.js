@@ -22,9 +22,11 @@ app.use(
 
 const characterRouter = require("./routes/characters");
 const assetRouter = require("./routes/asset");
+const scoreRouter = require("./routes/score");
 
 app.use("/api", characterRouter);
 app.use("/api", assetRouter);
+app.use("/api", scoreRouter);
 
 const PORT = process.env.PORT || 3000;
 
