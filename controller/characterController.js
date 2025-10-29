@@ -49,7 +49,14 @@ exports.checkCharacterLocation = async (req, res) => {
     // decrease character count on a chracter found.
     req.session.characterCount -= 1;
     // console.log(req.session);
-
+    // save timeElapsed in req.session, so that scoreController does not have to rely on font-end for timeElapsed
+    if (req.session.characterCount === 0) {
+      req.session.timeElapsed = (
+        (currentTime - req.session.startTime) /
+        1000
+      ).toFixed(2);
+      // console.log(req.session.timeElapsed);
+    }
     res.status(200).json({
       success: true,
       message: `${character.name} found`,
