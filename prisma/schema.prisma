@@ -34,8 +34,8 @@ model Gameboard {
 }
 
 model Score {
-  id       Int      @id @default(autoincrement())
-  username String
-  time     String
-  cratedAt DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  username  String
+  time      Float
+  createdAt DateTime @default(now())
 }
