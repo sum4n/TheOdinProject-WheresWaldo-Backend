@@ -39,5 +39,18 @@ exports.getScore = async (req, res) => {
     orderBy: { time: "asc" },
   });
 
-  res.json(scores);
+  const timeElapsed = parseFloat(req.session.timeElapsed);
+  // console.log({ timeElapsed });
+  // console.log({ lastScore: scores[scores.length - 1] });
+
+  // calculate ranking of the score.
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findLastIndex
+  let indexOfLastScore = scores.findLastIndex((score) => {
+    return score.time <= timeElapsed;
+  });
+  let rank = indexOfLastScore + 2;
+
+  // console.log({ rank });
+
+  res.json({ scores, timeElapsed, rank });
 };
