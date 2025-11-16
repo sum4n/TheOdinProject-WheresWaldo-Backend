@@ -23,6 +23,10 @@ exports.saveScore = [
     const timeElapsed = parseFloat(req.session.timeElapsed);
 
     if (req.session.rank <= 20) {
+      // remove the 20th rank score, it will keep 20 score records in the database.
+      await prisma.score.delete({
+        where: { id: req.session.scoreToRemove.id },
+      });
       // save username and score into database if rank is less than or eaual to 20
       const score = await prisma.score.create({
         data: {
@@ -52,7 +56,10 @@ exports.getScore = async (req, res) => {
   });
   let rank = indexOfLastScore + 2;
 
-  req.session.rank = rank; // needed for saveScore
+  // needed for saveScore
+  req.session.rank = rank;
+  req.session.scoreToRemove = scores[scores.length - 1];
+  // console.log(req.session.scoreToRemove);
 
   // console.log({ rank });
 
