@@ -22,15 +22,17 @@ exports.saveScore = [
     // get timeElapsed from req.session
     const timeElapsed = parseFloat(req.session.timeElapsed);
 
-    // save username and score into database
-    const score = await prisma.score.create({
-      data: {
-        username: username,
-        time: timeElapsed,
-      },
-    });
+    if (req.session.rank <= 20) {
+      // save username and score into database if rank is less than or eaual to 20
+      const score = await prisma.score.create({
+        data: {
+          username: username,
+          time: timeElapsed,
+        },
+      });
 
-    res.json({ message: "success", score });
+      res.json({ message: "success", score });
+    }
   },
 ];
 
@@ -49,6 +51,8 @@ exports.getScore = async (req, res) => {
     return score.time <= timeElapsed;
   });
   let rank = indexOfLastScore + 2;
+
+  req.session.rank = rank; // needed for saveScore
 
   // console.log({ rank });
 
