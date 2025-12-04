@@ -2,7 +2,7 @@ const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
 
 exports.getGameAssets = async (req, res) => {
-  const gameBoard = await prisma.gameboard.findFirst();
+  const gameBoard = await prisma.gameboard.findMany();
   const characters = await prisma.character.findMany({
     select: { id: true, name: true, imgUrl: true },
   });
