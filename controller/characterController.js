@@ -15,6 +15,25 @@ exports.getAllCharacterNames = async (req, res) => {
   res.status(200).json(nameList);
 };
 
+exports.getCharacters = async (req, res) => {
+  const boardId = parseInt(req.params.boardId);
+
+  const characters = await prisma.character.findMany({
+    where: { gameboardId: boardId },
+    select: {
+      id: true,
+      name: true,
+      imgUrl: true,
+    },
+  });
+
+  // set custom properties to check gameplay status
+  req.session.characterCount = characters.length;
+  req.session.startTime = Date.now();
+
+  res.status(200).json(characters);
+};
+
 exports.checkCharacterLocation = async (req, res) => {
   // add timer here. don't wait for server check. if correct use it to find time elapsed.
   const currentTime = Date.now();
