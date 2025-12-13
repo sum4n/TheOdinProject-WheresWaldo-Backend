@@ -41,8 +41,11 @@ exports.saveScore = [
 ];
 
 exports.getScore = async (req, res) => {
+  const boardId = parseInt(req.params.boardId);
+
   const scores = await prisma.score.findMany({
     orderBy: { time: "asc" },
+    where: { gameboardId: boardId },
   });
 
   const timeElapsed = parseFloat(req.session.timeElapsed);
@@ -58,7 +61,10 @@ exports.getScore = async (req, res) => {
 
   // needed for saveScore
   req.session.rank = rank;
-  req.session.scoreToRemove = scores[scores.length - 1];
+  if (scores.length == 20) {
+    req.session.scoreToRemove = scores[scores.length - 1];
+  }
+
   // console.log(req.session.scoreToRemove);
 
   // console.log({ rank });
