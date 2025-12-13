@@ -3,7 +3,7 @@ const router = Router();
 
 const scoreController = require("../controller/scoreController");
 
-router.get("/score", scoreController.getScore);
-router.post("/score", scoreController.saveScore);
+router.get("/gameboards/:boardId/score", scoreController.getScore);
+router.post("/gameboards/:boardId/score", scoreController.saveScore);
 
 module.exports = router;
