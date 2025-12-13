@@ -31,11 +31,14 @@ model Gameboard {
   name       String      @unique
   imgUrl     String      @unique
   characters Character[]
+  scores     Score[]
 }
 
 model Score {
-  id        Int      @id @default(autoincrement())
-  username  String
-  time      Float
-  createdAt DateTime @default(now())
+  id          Int       @id @default(autoincrement())
+  username    String
+  time        Float
+  createdAt   DateTime  @default(now())
+  Gameboard   Gameboard @relation(fields: [gameboardId], references: [id])
+  gameboardId Int
 }
