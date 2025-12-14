@@ -30,6 +30,7 @@ exports.saveScore = [
         await prisma.score.delete({
           where: { id: req.session.scoreToRemove.id },
         });
+        delete req.session.scoreToRemove;
       }
 
       // save username and score into database if rank is less than or eaual to 20
