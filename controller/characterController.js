@@ -82,9 +82,10 @@ exports.checkCharacterLocation = async (req, res) => {
       name: character.name,
       gameEnd: req.session.characterCount == 0, // when all characters are found
       timeElapsed:
-        req.session.characterCount == 0
-          ? ((currentTime - req.session.startTime) / 1000).toFixed(2)
-          : null,
+        // req.session.characterCount == 0
+        //   ? ((currentTime - req.session.startTime) / 1000).toFixed(2)
+        //   : null,
+        ((currentTime - req.session.startTime) / 1000).toFixed(2),
     });
   } else {
     res.status(200).json({
