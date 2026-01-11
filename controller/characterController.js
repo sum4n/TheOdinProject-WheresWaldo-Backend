@@ -1,11 +1,14 @@
-const { PrismaClient } = require("../generated/prisma");
-
-const prisma = new PrismaClient();
+const prisma = require("../db/prisma");
+const CustomNotFoundError = require("../errors/CustomNotFoundError");
 
 exports.getAllCharacterNames = async (req, res) => {
   const allCharacterNames = await prisma.character.findMany({
     select: { name: true },
   });
+
+  if (allCharacterNames.length === 0) {
+    throw new CustomNotFoundError("No characters found");
+  }
 
   const nameList = [];
   allCharacterNames.forEach((name) => {
