@@ -10,10 +10,7 @@ exports.getAllCharacterNames = async (req, res) => {
     throw new CustomNotFoundError("No characters found");
   }
 
-  const nameList = [];
-  allCharacterNames.forEach((name) => {
-    nameList.push(name.name);
-  });
+  const nameList = allCharacterNames.map((character) => character.name);
 
   res.status(200).json(nameList);
 };
