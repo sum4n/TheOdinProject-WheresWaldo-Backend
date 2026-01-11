@@ -30,4 +30,13 @@ app.use("/api", characterRouter);
 app.use("/api", gameboardRouter);
 app.use("/api", scoreRouter);
 
+app.use((err, req, res, next) => {
+  console.error(err);
+
+  res.status(err.statusCode || 500).json({
+    error: err.name || "Error",
+    message: err.message || "Internal Server Error",
+  });
+});
+
 module.exports = app;
