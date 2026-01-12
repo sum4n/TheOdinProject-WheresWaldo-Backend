@@ -25,10 +25,12 @@ app.use(
 const characterRouter = require("./routes/characters");
 const gameboardRouter = require("./routes/gameboard");
 const scoreRouter = require("./routes/score");
+const gameRouter = require("./routes/game");
 
 app.use("/api", characterRouter);
 app.use("/api", gameboardRouter);
 app.use("/api", scoreRouter);
+app.use("/api", gameRouter);
 
 app.use((err, req, res, next) => {
   console.error(err);
