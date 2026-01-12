@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "NODE_DEV=development node --watch server.js",
-    "test": "NODE_DEV=test jest --watch"
+    "test": "NODE_DEV=test jest --watch --runInBand"
   },
   "author": "Suman Das",
   "license": "ISC",
