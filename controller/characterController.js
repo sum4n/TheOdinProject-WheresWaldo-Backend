@@ -15,7 +15,7 @@ exports.getAllCharacterNames = async (req, res) => {
   res.status(200).json(nameList);
 };
 
-exports.getCharacters = async (req, res) => {
+exports.getCharactersByBoardId = async (req, res) => {
   const boardId = parseInt(req.params.boardId);
 
   const characters = await prisma.character.findMany({
@@ -26,10 +26,6 @@ exports.getCharacters = async (req, res) => {
       imgUrl: true,
     },
   });
-
-  // set custom properties to check gameplay status
-  req.session.characterCount = characters.length;
-  req.session.startTime = Date.now();
 
   res.status(200).json(characters);
 };
