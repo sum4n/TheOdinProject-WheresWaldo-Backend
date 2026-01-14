@@ -16,7 +16,10 @@ exports.getAllCharacterNames = async (req, res) => {
 };
 
 exports.getCharactersByBoardId = async (req, res) => {
-  const boardId = parseInt(req.params.boardId);
+  const boardId = Number(req.params.boardId);
+  if (!Number.isInteger(boardId)) {
+    return res.status(400).json({ error: "Invalid board id" });
+  }
 
   const characters = await prisma.character.findMany({
     where: { gameboardId: boardId },
