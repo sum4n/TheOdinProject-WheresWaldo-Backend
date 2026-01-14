@@ -21,14 +21,24 @@ exports.getCharactersByBoardId = async (req, res) => {
     return res.status(400).json({ error: "Invalid board id" });
   }
 
-  const characters = await prisma.character.findMany({
-    where: { gameboardId: boardId },
-    select: {
-      id: true,
-      name: true,
-      imgUrl: true,
+  const gameboard = await prisma.gameboard.findUnique({
+    where: { id: boardId },
+    include: {
+      characters: {
+        select: {
+          id: true,
+          name: true,
+          imgUrl: true,
+        },
+      },
     },
   });
+
+  if (!gameboard) {
+    return res.status(404).json({ error: "No gameboard found" });
+  }
+
+  const characters = gameboard.characters;
 
   res.status(200).json(characters);
 };
