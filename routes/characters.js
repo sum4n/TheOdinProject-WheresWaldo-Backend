@@ -5,7 +5,10 @@ const characterController = require("../controller/characterController");
 
 router.get("/characters", characterController.getAllCharacterNames);
 
-router.get("/:boardId/characters", characterController.getCharactersByBoardId);
+router.get(
+  "/gameboards/:boardId/characters",
+  characterController.getCharactersByBoardId
+);
 
 router.get(
   "/characters/check/:characterName",
