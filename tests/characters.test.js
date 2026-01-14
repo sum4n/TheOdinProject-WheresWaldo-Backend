@@ -93,7 +93,6 @@ describe("GET /:boardId/characters", () => {
     const res = await request(app).get(`/api/${gameboard.id}/characters`);
 
     expect(res.status).toBe(200);
-    // expect(res.body.message).toBe("No characters found");
     expect(res.body).toEqual([]);
   });
 
@@ -101,12 +100,13 @@ describe("GET /:boardId/characters", () => {
     const res = await request(app).get(`/api/${gameboard.id + 1}/characters`);
 
     expect(res.status).toBe(404);
-    expect(res.body.message).toBe("No gameboard found");
+    expect(res.body.error).toBe("No gameboard found");
   });
 
   it("returns error when board id is not an integer", async () => {
     const res = await request(app).get("/api/badId/characters");
     // console.log(res.status);
     expect(res.status).toBe(400);
+    expect(res.body.error).toBe("Invalid board id");
   });
 });
