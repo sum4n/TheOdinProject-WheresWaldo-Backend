@@ -77,3 +77,36 @@ describe("GET /characters", () => {
     expect(res.body.message).toBe("No characters found");
   });
 });
+
+describe("GET /:boardId/characters", () => {
+  it("returns all characters with specific boardId", async () => {
+    const res = await request(app).get(`/api/${gameboard.id}/characters`);
+    // console.log(res.body);
+    expect(res.status).toBe(200);
+    expect(res.headers["content-type"]).toMatch(/json/);
+    expect(Array.isArray(res.body)).toBe(true);
+  });
+
+  it("returns empty array when no characters exist", async () => {
+    await prisma.character.deleteMany();
+
+    const res = await request(app).get(`/api/${gameboard.id}/characters`);
+
+    expect(res.status).toBe(200);
+    // expect(res.body.message).toBe("No characters found");
+    expect(res.body).toEqual([]);
+  });
+
+  it("returns 404 when gameboard id is not found", async () => {
+    const res = await request(app).get(`/api/${gameboard.id + 1}/characters`);
+
+    expect(res.status).toBe(404);
+    expect(res.body.message).toBe("No gameboard found");
+  });
+
+  it("returns error when board id is not an integer", async () => {
+    const res = await request(app).get("/api/badId/characters");
+    // console.log(res.status);
+    expect(res.status).toBe(400);
+  });
+});
