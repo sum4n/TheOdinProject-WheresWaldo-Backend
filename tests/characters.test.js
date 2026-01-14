@@ -78,9 +78,11 @@ describe("GET /characters", () => {
   });
 });
 
-describe("GET /:boardId/characters", () => {
+describe("GET /gameboards/:boardId/characters", () => {
   it("returns all characters with specific boardId", async () => {
-    const res = await request(app).get(`/api/${gameboard.id}/characters`);
+    const res = await request(app).get(
+      `/api/gameboards/${gameboard.id}/characters`
+    );
     // console.log(res.body);
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toMatch(/json/);
@@ -90,21 +92,25 @@ describe("GET /:boardId/characters", () => {
   it("returns empty array when no characters exist", async () => {
     await prisma.character.deleteMany();
 
-    const res = await request(app).get(`/api/${gameboard.id}/characters`);
+    const res = await request(app).get(
+      `/api/gameboards/${gameboard.id}/characters`
+    );
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual([]);
   });
 
   it("returns 404 when gameboard id is not found", async () => {
-    const res = await request(app).get(`/api/${gameboard.id + 1}/characters`);
+    const res = await request(app).get(
+      `/api/gameboards/${gameboard.id + 1}/characters`
+    );
 
     expect(res.status).toBe(404);
     expect(res.body.error).toBe("No gameboard found");
   });
 
   it("returns error when board id is not an integer", async () => {
-    const res = await request(app).get("/api/badId/characters");
+    const res = await request(app).get("/api/gameboards/badId/characters");
     // console.log(res.status);
     expect(res.status).toBe(400);
     expect(res.body.error).toBe("Invalid board id");
