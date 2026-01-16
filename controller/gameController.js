@@ -41,3 +41,39 @@ exports.startGame = async (req, res) => {
 
   res.status(200).json({ message: "Game started", gameStartTime });
 };
+
+exports.gamePlay = async (req, res) => {
+  // get click location from query parameters
+  const left = Number(req.query.left);
+  const top = Number(req.query.top);
+
+  // console.log({ left, top });
+  // console.log(req.query);
+
+  if (!left || !top || Number(left) === NaN || Number(top) === NaN) {
+    return res.status(400).json({
+      error: "Invalid query parameters",
+      message:
+        "Both 'left' and'top' query parameters are required and must be numeric values",
+    });
+  }
+
+  const boardId = Number(req.params.boardId);
+  const characterId = Number(req.params.characterId);
+
+  if (!Number.isInteger(boardId)) {
+    return res.status(400).json({
+      error: "Invalid boardId",
+      message: "boardId must be integer",
+    });
+  }
+
+  if (!Number.isInteger(characterId)) {
+    return res.status(400).json({
+      error: "Invalid characterId",
+      message: "characterId must be integer",
+    });
+  }
+
+  res.json({ left, top });
+};
