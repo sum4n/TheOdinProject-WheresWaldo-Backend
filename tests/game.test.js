@@ -123,3 +123,51 @@ describe("GET /game/:boardId", () => {
     expect(res.body.charactersToBeFound).toBe(2);
   });
 });
+
+describe("GET /game/:boardId/characters/:characterId", () => {
+  it("returns error when no query parameters are given", async () => {
+    const res = await request(app).get(
+      `/api/game/${gameboard.id}/characters/1`
+    );
+
+    // console.log(res.body);
+    expect(res.status).toBe(400);
+    expect(res.body.error).toEqual("Invalid query parameters");
+  });
+
+  it("returns error when invalid query parameters are given", async () => {
+    const res = await request(app).get(
+      `/api/game/${gameboard.id}/characters/1?left=abc&&top=dcc`
+    );
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toEqual("Invalid query parameters");
+  });
+
+  it("returns error when either top or left parameter is absent", async () => {
+    const res = await request(app).get(
+      `/api/game/${gameboard.id}/characters/1?left={1}`
+    );
+
+    expect(res.status).toBe(400);
+  });
+
+  it("returns 400 error if boardId is not integer", async () => {
+    const res = await request(app).get(
+      "/api/game/aa/characters/1?left=1&&top=1"
+    );
+
+    // console.log(res.body);
+    expect(res.status).toBe(400);
+    expect(res.body.message).toEqual("boardId must be integer");
+  });
+
+  it("returns 400 error if characterId is not integer", async () => {
+    const res = await request(app).get(
+      "/api/game/1/characters/a?left=1&&top=1"
+    );
+
+    expect(res.status).toBe(400);
+    expect(res.body.message).toEqual("characterId must be integer");
+  });
+});
