@@ -182,4 +182,24 @@ describe("GET /game/:boardId/characters/:characterId", () => {
     expect(res.status).toBe(404);
     expect(res.body.error).toEqual(`Character not found`);
   });
+
+  it("returns character not found if given position is wrong", async () => {
+    const characterId = 1;
+    const res = await request(app).get(
+      `/api/game/${gameboard.id}/characters/${characterId}?left=1&&top=1`
+    );
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toEqual(false);
+  });
+
+  it("returns character found if given position is correct", async () => {
+    const characterId = 1;
+    const res = await request(app).get(
+      `/api/game/${gameboard.id}/characters/${characterId}?left=15&&top=22`
+    );
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toEqual(true);
+  });
 });
