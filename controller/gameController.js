@@ -88,5 +88,30 @@ exports.gamePlay = async (req, res) => {
     });
   }
 
+  const isCharacterFound = checkLocation(character, left, top);
+
+  if (isCharacterFound) {
+    return res.status(200).json({
+      success: true,
+    });
+  } else {
+    return res.status(200).json({
+      success: false,
+    });
+  }
+
   res.json({ left, top });
 };
+
+function checkLocation(character, left, top) {
+  if (
+    left >= character.xLeft &&
+    left <= character.xRight &&
+    top >= character.yTop &&
+    top <= character.yBottom
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
