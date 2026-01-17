@@ -40,6 +40,7 @@ beforeEach(async () => {
   await prisma.character.createMany({
     data: [
       {
+        id: 1,
         name: "Waldo2",
         xLeft: 10,
         xRight: 20,
@@ -49,6 +50,7 @@ beforeEach(async () => {
         gameboardId: gameboard.id,
       },
       {
+        id: 2,
         name: "Wizard2",
         xLeft: 33,
         xRight: 44,
@@ -169,5 +171,15 @@ describe("GET /game/:boardId/characters/:characterId", () => {
 
     expect(res.status).toBe(400);
     expect(res.body.message).toEqual("characterId must be integer");
+  });
+
+  it("returns 404 not found error if no character is found", async () => {
+    const characterId = 0;
+    const res = await request(app).get(
+      `/api/game/${gameboard.id}/characters/${characterId}?left=1&&top=1`
+    );
+
+    expect(res.status).toBe(404);
+    expect(res.body.error).toEqual(`Character not found`);
   });
 });
