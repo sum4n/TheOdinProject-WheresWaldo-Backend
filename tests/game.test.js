@@ -11,7 +11,7 @@ app.use(
     secret: "waldo-secret",
     resave: false,
     saveUninitialized: false,
-  })
+  }),
 );
 app.use("/api", game);
 
@@ -129,7 +129,7 @@ describe("GET /game/:boardId", () => {
 describe("GET /game/:boardId/characters/:characterId", () => {
   it("returns error when no query parameters are given", async () => {
     const res = await request(app).get(
-      `/api/game/${gameboard.id}/characters/1`
+      `/api/game/${gameboard.id}/characters/1`,
     );
 
     // console.log(res.body);
@@ -139,7 +139,7 @@ describe("GET /game/:boardId/characters/:characterId", () => {
 
   it("returns error when invalid query parameters are given", async () => {
     const res = await request(app).get(
-      `/api/game/${gameboard.id}/characters/1?left=abc&&top=dcc`
+      `/api/game/${gameboard.id}/characters/1?left=abc&&top=dcc`,
     );
 
     expect(res.status).toBe(400);
@@ -148,7 +148,7 @@ describe("GET /game/:boardId/characters/:characterId", () => {
 
   it("returns error when either top or left parameter is absent", async () => {
     const res = await request(app).get(
-      `/api/game/${gameboard.id}/characters/1?left={1}`
+      `/api/game/${gameboard.id}/characters/1?left={1}`,
     );
 
     expect(res.status).toBe(400);
@@ -156,7 +156,7 @@ describe("GET /game/:boardId/characters/:characterId", () => {
 
   it("returns 400 error if boardId is not integer", async () => {
     const res = await request(app).get(
-      "/api/game/aa/characters/1?left=1&&top=1"
+      "/api/game/aa/characters/1?left=1&&top=1",
     );
 
     // console.log(res.body);
@@ -166,7 +166,7 @@ describe("GET /game/:boardId/characters/:characterId", () => {
 
   it("returns 400 error if characterId is not integer", async () => {
     const res = await request(app).get(
-      "/api/game/1/characters/a?left=1&&top=1"
+      "/api/game/1/characters/a?left=1&&top=1",
     );
 
     expect(res.status).toBe(400);
@@ -176,7 +176,7 @@ describe("GET /game/:boardId/characters/:characterId", () => {
   it("returns 404 not found error if no character is found", async () => {
     const characterId = 0;
     const res = await request(app).get(
-      `/api/game/${gameboard.id}/characters/${characterId}?left=1&&top=1`
+      `/api/game/${gameboard.id}/characters/${characterId}?left=1&&top=1`,
     );
 
     expect(res.status).toBe(404);
@@ -186,7 +186,7 @@ describe("GET /game/:boardId/characters/:characterId", () => {
   it("returns character not found if given position is wrong", async () => {
     const characterId = 1;
     const res = await request(app).get(
-      `/api/game/${gameboard.id}/characters/${characterId}?left=1&&top=1`
+      `/api/game/${gameboard.id}/characters/${characterId}?left=1&&top=1`,
     );
 
     expect(res.status).toBe(200);
@@ -195,11 +195,27 @@ describe("GET /game/:boardId/characters/:characterId", () => {
 
   it("returns character found if given position is correct", async () => {
     const characterId = 1;
-    const res = await request(app).get(
-      `/api/game/${gameboard.id}/characters/${characterId}?left=15&&top=22`
-    );
+    const agent = request.agent(app);
 
+    // needed for req.session.gameStartTime
+    await agent.get(`/api/game/${gameboard.id}`);
+
+    const res = await agent.get(
+      `/api/game/${gameboard.id}/characters/${characterId}?left=15&&top=22`,
+    );
+    const character = await prisma.character.findFirst({
+      where: {
+        id: characterId,
+        gameboardId: gameboard.id,
+      },
+    });
+
+    // console.log(res.body);
     expect(res.status).toBe(200);
     expect(res.body.success).toEqual(true);
+    expect(res.body.message).toEqual(`${character.name} found`);
+    expect(res.body.characterName).toEqual(character.name);
+    expect(res.body.timeElapsed).toBeCloseTo(0.01, 1);
+    expect(res.body.allCharactersFound).toBe(false);
   });
 });
