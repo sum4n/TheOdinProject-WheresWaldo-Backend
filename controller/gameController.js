@@ -35,6 +35,7 @@ exports.startGame = async (req, res) => {
 
   const characters = gameBoard.characters;
   // add characters length in session
+  // needed to track when game ends
   req.session.charactersToBeFound = characters.length;
 
   // console.log(req.session);
@@ -43,6 +44,8 @@ exports.startGame = async (req, res) => {
 };
 
 exports.gamePlay = async (req, res) => {
+  const currentTime = Date.now();
+
   // get click location from query parameters
   const left = Number(req.query.left);
   const top = Number(req.query.top);
@@ -88,19 +91,28 @@ exports.gamePlay = async (req, res) => {
     });
   }
 
-  const isCharacterFound = checkLocation(character, left, top);
+  const isLocationCorrect = checkLocation(character, left, top);
 
-  if (isCharacterFound) {
+  if (isLocationCorrect) {
+    // remove numbers of charactersToBeFound
+    req.session.charactersToBeFound--;
+    const timeElapsed = (
+      (currentTime - req.session.gameStartTime) /
+      1000
+    ).toFixed(2);
+
     return res.status(200).json({
       success: true,
+      message: `${character.name} found`,
+      characterName: character.name,
+      timeElapsed: Number(timeElapsed),
+      allCharactersFound: req.session.charactersToBeFound === 0,
     });
   } else {
     return res.status(200).json({
       success: false,
     });
   }
-
-  res.json({ left, top });
 };
 
 function checkLocation(character, left, top) {
