@@ -227,4 +227,29 @@ describe("GET /game/:boardId/characters/:characterId", () => {
     expect(res.body.timeElapsed).toBeCloseTo(0.01, 1);
     expect(res.body.allCharactersFound).toBe(false);
   });
+
+  it("returs 400 status if all characters have been found already", async () => {
+    const characters = await prisma.character.findMany({
+      where: {
+        gameboardId: gameboard.id,
+      },
+    });
+
+    // console.log(characters);
+    const agent = request.agent(app);
+    await agent.get(`/api/game/${gameboard.id}`);
+    await agent.get(
+      `/api/game/${gameboard.id}/characters/${characters[0].id}?left=15&&top=22`,
+    );
+    await agent.get(
+      `/api/game/${gameboard.id}/characters/${characters[1].id}?left=35&&top=62`,
+    );
+    const res = await agent.get(
+      `/api/game/${gameboard.id}/characters/${characters[1].id}?left=35&&top=62`,
+    );
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toEqual("The game has ended");
+    expect(res.body.message).toEqual("Already all characters have been found");
+  });
 });
