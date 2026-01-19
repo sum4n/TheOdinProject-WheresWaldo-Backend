@@ -1,6 +1,8 @@
 const prisma = require("../db/prisma");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
 
+// starts game by adding gameStartTime and number of characters
+// to be found in session
 exports.startGame = async (req, res) => {
   const boardId = Number(req.params.boardId);
   if (!Number.isInteger(boardId)) {
@@ -43,15 +45,17 @@ exports.startGame = async (req, res) => {
   res.status(200).json({ message: "Game started", gameStartTime });
 };
 
+// gamePlay logic
+// checks character location, adds and updates timeElapsed when
+// a character is found.
+// checks if all characters are found
 exports.gamePlay = async (req, res) => {
+  // to calculate time elapsed. set as soon as request is received
   const currentTime = Date.now();
 
   // get click location from query parameters
   const left = Number(req.query.left);
   const top = Number(req.query.top);
-
-  // console.log({ left, top });
-  // console.log(req.query);
 
   if (!left || !top || Number(left) === NaN || Number(top) === NaN) {
     return res.status(400).json({
@@ -94,7 +98,6 @@ exports.gamePlay = async (req, res) => {
   const isLocationCorrect = checkLocation(character, left, top);
 
   if (isLocationCorrect) {
-    // remove numbers of charactersToBeFound
     req.session.charactersToBeFound--;
     const timeElapsed = (
       (currentTime - req.session.gameStartTime) /
