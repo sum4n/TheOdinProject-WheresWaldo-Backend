@@ -105,7 +105,7 @@ exports.gamePlay = async (req, res) => {
 
   if (isLocationCorrect) {
     req.session.charactersToBeFound--;
-    const timeElapsed = (
+    req.session.timeElapsed = (
       (currentTime - req.session.gameStartTime) /
       1000
     ).toFixed(2);
@@ -114,7 +114,7 @@ exports.gamePlay = async (req, res) => {
       success: true,
       message: `${character.name} found`,
       characterName: character.name,
-      timeElapsed: Number(timeElapsed),
+      timeElapsed: Number(req.session.timeElapsed),
       allCharactersFound: req.session.charactersToBeFound === 0,
     });
   } else {
