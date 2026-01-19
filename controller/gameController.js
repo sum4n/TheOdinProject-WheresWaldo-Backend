@@ -50,6 +50,12 @@ exports.startGame = async (req, res) => {
 // a character is found.
 // checks if all characters are found
 exports.gamePlay = async (req, res) => {
+  if (req.session.charactersToBeFound === 0) {
+    return res.status(400).json({
+      error: "The game has ended",
+      message: "Already all characters have been found",
+    });
+  }
   // to calculate time elapsed. set as soon as request is received
   const currentTime = Date.now();
 
