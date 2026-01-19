@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 app.use(
   session({
-    secret: "waldo-secret",
+    secret: "secret",
     resave: false,
     saveUninitialized: false,
   }),
@@ -228,7 +228,19 @@ describe("GET /game/:boardId/characters/:characterId", () => {
     expect(res.body.allCharactersFound).toBe(false);
   });
 
-  it("returs 400 status if all characters have been found already", async () => {
+  it("contains timeElapsed in req.session", async () => {
+    const characterId = 1;
+    const agent = request.agent(app);
+    await agent.get(`/api/game/${gameboard.id}`);
+    await agent.get(
+      `/api/game/${gameboard.id}/characters/${characterId}?left=15&&top=22`,
+    );
+    const res = await agent.get("/__test/session");
+
+    expect(res.body.timeElapsed).toBeDefined();
+  });
+
+  it("returns 400 status if all characters have been found already", async () => {
     const characters = await prisma.character.findMany({
       where: {
         gameboardId: gameboard.id,
