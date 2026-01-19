@@ -189,8 +189,17 @@ describe("GET /game/:boardId/characters/:characterId", () => {
       `/api/game/${gameboard.id}/characters/${characterId}?left=1&&top=1`,
     );
 
+    const character = await prisma.character.findFirst({
+      where: {
+        id: characterId,
+        gameboardId: gameboard.id,
+      },
+    });
+
     expect(res.status).toBe(200);
     expect(res.body.success).toEqual(false);
+    expect(res.body.message).toEqual(`${character.name} not found`);
+    expect(res.body.characterName).toEqual(character.name);
   });
 
   it("returns character found if given position is correct", async () => {
