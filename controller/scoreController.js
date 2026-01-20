@@ -48,7 +48,13 @@ exports.saveScore = [
 ];
 
 exports.getScore = async (req, res) => {
-  const boardId = parseInt(req.params.boardId);
+  const boardId = Number(req.params.boardId);
+  if (!Number.isInteger(boardId)) {
+    return res.status(400).json({
+      error: "Invalid boardId",
+      message: "BoardId must be integer",
+    });
+  }
 
   const scores = await prisma.score.findMany({
     orderBy: { time: "asc" },
