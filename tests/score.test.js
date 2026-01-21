@@ -83,4 +83,11 @@ describe("GET /gameboards/:boardId/score", () => {
     expect(res.status).toBe(200);
     expect(res.body.scores).toEqual([]);
   });
+
+  it("returns scores list when scores are present", async () => {
+    const res = await request(app).get(`/gameboards/${gameBoard.id}/score`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.scores.length).toBe(2);
+  });
 });
