@@ -76,4 +76,11 @@ describe("GET /gameboards/:boardId/score", () => {
     expect(res.body.error).toEqual("Invalid boardId");
     expect(res.body.message).toEqual("BoardId must be integer");
   });
+
+  it("returns empty list when wrong boardId is given", async () => {
+    const res = await request(app).get(`/gameboards/${gameBoard.id + 1}/score`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.scores).toEqual([]);
+  });
 });
