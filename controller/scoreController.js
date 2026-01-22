@@ -58,28 +58,8 @@ exports.getScore = async (req, res) => {
   const scores = await prisma.score.findMany({
     orderBy: { time: "asc" },
     where: { gameboardId: boardId },
+    take: 30,
   });
 
-  const timeElapsed = parseFloat(req.session.timeElapsed);
-  // console.log({ timeElapsed });
-  // console.log({ lastScore: scores[scores.length - 1] });
-
-  // calculate ranking of the score.
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findLastIndex
-  let indexOfLastScore = scores.findLastIndex((score) => {
-    return score.time <= timeElapsed;
-  });
-  let rank = indexOfLastScore + 2;
-
-  // needed for saveScore
-  req.session.rank = rank;
-  if (scores.length == 20) {
-    req.session.scoreToRemove = scores[scores.length - 1];
-  }
-
-  // console.log(req.session.scoreToRemove);
-
-  // console.log({ rank });
-
-  res.json({ scores, timeElapsed, rank });
+  res.status(200).json({ scores });
 };
