@@ -15,13 +15,20 @@ exports.saveScore = [
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.json({ message: errors.array() });
+      return res.status(400).json({ message: errors.array() });
     }
     const { username } = matchedData(req);
-    // get timeElapsed from req.session
-    const timeElapsed = parseFloat(req.session.timeElapsed);
 
-    const boardId = parseInt(req.params.boardId);
+    const boardId = Number(req.params.boardId);
+    if (!Number.isInteger(boardId)) {
+      return res.status(400).json({ error: "Invalid board id" });
+    }
+
+    // get timeElapsed from req.session
+    const timeElapsed = Number(req.session.timeElapsed);
+    if (!timeElapsed) {
+      return res.status(500).json({ error: "Internal server error" });
+    }
 
     if (req.session.rank <= 20) {
       // remove the 20th rank score, it will keep 20 score records in the database.
