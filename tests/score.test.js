@@ -17,7 +17,8 @@ app.use(
 
 app.use("/", score);
 
-app.get("__test/session", (req, res) => {
+app.get("/__test/session", (req, res) => {
+  req.session.timeElapsed = 5.2;
   res.json(req.session);
 });
 
@@ -45,13 +46,13 @@ beforeEach(async () => {
     data: [
       {
         id: 1,
-        username: "user1",
+        username: "userOne",
         time: 1.1,
         gameboardId: gameBoard.id,
       },
       {
         id: 2,
-        username: "user2",
+        username: "userTwo",
         time: 2.2,
         gameboardId: gameBoard.id,
       },
@@ -89,5 +90,41 @@ describe("GET /gameboards/:boardId/score", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.scores.length).toBe(2);
+  });
+});
+
+describe("POST /gameboards/:boardId/score", () => {
+  it("returns errors array if username is invalid", async () => {
+    const res = await request(app)
+      .post(`/gameboards/${gameBoard.id}/score`)
+      .send({ username: "user123" })
+      .set("Accept", "application/json");
+
+    expect(res.headers["content-type"]).toMatch(/json/);
+    expect(res.status).toBe(400);
+    expect(res.body.message[0].msg).toEqual(
+      "Username must only contain letters.",
+    );
+  });
+
+  it("returns 400 error when invalid boardId is given", async () => {
+    const res = await request(app)
+      .post("/gameboards/invalidId/score")
+      .send({ username: "user" })
+      .set("Accept", "application/json");
+
+    expect(res.headers["content-type"]).toMatch(/json/);
+    expect(res.status).toBe(400);
+    expect(res.body.error).toEqual("Invalid board id");
+  });
+
+  it("returns 500 status code if timeElapsed is not found in session", async () => {
+    const res = await request(app)
+      .post(`/gameboards/${gameBoard.id}/score`)
+      .send({ username: "user" })
+      .set("Accept", "applicaion/json");
+
+    expect(res.status).toBe(500);
+    expect(res.body.error).toEqual("Internal server error");
   });
 });
