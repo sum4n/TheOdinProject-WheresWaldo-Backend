@@ -158,4 +158,26 @@ describe("POST /gameboards/:boardId/score", () => {
     expect(res.body.err).toEqual("PrismaClientKnownRequestError");
     expect(res.body.code).toEqual("P2003");
   });
+
+  it("returns 200 and save score with duplicate usernames", async () => {
+    const agent1 = request.agent(app);
+    // add timeElapsed
+    await agent1.get("/__test/session");
+    const res1 = await agent1
+      .post(`/gameboards/${gameBoard.id}/score`)
+      .send({ username: "UserFour" })
+      .set("Accept", "application/json");
+
+    const agent2 = request.agent(app);
+    await agent2.get("/__test/session");
+    const res2 = await agent2
+      .post(`/gameboards/${gameBoard.id}/score`)
+      .send({ username: "UserFour" })
+      .set("Accept", "application/json");
+
+    expect(res1.status).toBe(200);
+    expect(res2.status).toBe(200);
+    expect(res1.body.score.id).not.toEqual(res2.body.score.id);
+    expect(res1.body.score.username).toEqual(res2.body.score.username);
+  });
 });
