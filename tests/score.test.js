@@ -127,4 +127,19 @@ describe("POST /gameboards/:boardId/score", () => {
     expect(res.status).toBe(500);
     expect(res.body.error).toEqual("Internal server error");
   });
+
+  it("returns 200 and saves the score", async () => {
+    const agent = request.agent(app);
+    // adds req.session.timeElapsed
+    await agent.get("/__test/session");
+
+    const res = await agent
+      .post(`/gameboards/${gameBoard.id}/score`)
+      .send({ username: "UserThree" })
+      .set("Accept", "application/json");
+
+    expect(res.status).toBe(200);
+    expect(res.body.message).toEqual("success");
+    expect(res.body.score).toBeDefined();
+  });
 });
