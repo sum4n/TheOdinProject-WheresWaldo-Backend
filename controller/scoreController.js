@@ -30,26 +30,18 @@ exports.saveScore = [
       return res.status(500).json({ error: "Internal server error" });
     }
 
-    if (req.session.rank <= 20) {
-      // remove the 20th rank score, it will keep 20 score records in the database.
-      if (req.session.scoreToRemove) {
-        await prisma.score.delete({
-          where: { id: req.session.scoreToRemove.id },
-        });
-        delete req.session.scoreToRemove;
-      }
+    const score = await prisma.score.create({
+      data: {
+        username: username,
+        time: timeElapsed,
+        gameboardId: boardId,
+      },
+    });
 
-      // save username and score into database if rank is less than or eaual to 20
-      const score = await prisma.score.create({
-        data: {
-          username: username,
-          time: timeElapsed,
-          gameboardId: boardId,
-        },
-      });
-
-      res.json({ message: "success", score });
-    }
+    return res.status(200).json({
+      message: "success",
+      score,
+    });
   },
 ];
 
