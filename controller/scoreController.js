@@ -27,7 +27,10 @@ exports.saveScore = [
     // get timeElapsed from req.session
     const timeElapsed = Number(req.session.timeElapsed);
     if (!timeElapsed) {
-      return res.status(500).json({ error: "Internal server error" });
+      return res.status(500).json({
+        error: "Internal server error",
+        message: "timeElapsed is not defined in session",
+      });
     }
 
     const score = await prisma.score.create({

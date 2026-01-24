@@ -11,7 +11,7 @@ app.use(
     origin: "http://localhost:5173",
     credentials: true,
     methods: ["GET", "POST"],
-  })
+  }),
 );
 
 app.use(
@@ -19,7 +19,7 @@ app.use(
     secret: "waldo-secre",
     resave: false,
     saveUninitialized: false,
-  })
+  }),
 );
 
 const characterRouter = require("./routes/characters");
@@ -38,6 +38,7 @@ app.use((err, req, res, next) => {
   res.status(err.statusCode || 500).json({
     error: err.name || "Error",
     message: err.message || "Internal Server Error",
+    code: err.code || undefined,
   });
 });
 
