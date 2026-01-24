@@ -26,6 +26,7 @@ app.use((err, req, res, next) => {
   res.status(err.statusCode || 500).json({
     err: err.name || "Error",
     message: err.message || "Internal server error",
+    code: err.code || undefined,
   });
 });
 
@@ -141,5 +142,20 @@ describe("POST /gameboards/:boardId/score", () => {
     expect(res.status).toBe(200);
     expect(res.body.message).toEqual("success");
     expect(res.body.score).toBeDefined();
+  });
+
+  it("returns 500 error when boardId given is not present in the database", async () => {
+    const agent = request.agent(app);
+    // add req.session.timeElapsed
+    await agent.get("/__test/session");
+
+    const res = await agent
+      .post(`/gameboards/${gameBoard.id + 1}/score`)
+      .send({ username: "UserFour" })
+      .set("Accept", "application/json");
+
+    expect(res.status).toBe(500);
+    expect(res.body.err).toEqual("PrismaClientKnownRequestError");
+    expect(res.body.code).toEqual("P2003");
   });
 });
