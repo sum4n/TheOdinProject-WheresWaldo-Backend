@@ -1,5 +1,4 @@
-const { PrismaClient } = require("../generated/prisma");
-const prisma = new PrismaClient();
+const prisma = require("../db/prisma");
 
 exports.getGameBoards = async (req, res) => {
   const gameBoards = await prisma.gameboard.findMany({
