@@ -4,9 +4,9 @@
   "description": "Backend for WheresWaldo",
   "main": "app.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "NODE_DEV=development node --watch server.js",
-    "test": "NODE_DEV=test jest --watch --runInBand"
+    "start": "node app.js",
+    "dev": "node --watch app.js",
+    "test": "jest --watch --runInBand"
   },
   "author": "Suman Das",
   "license": "ISC",
