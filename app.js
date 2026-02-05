@@ -8,7 +8,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CORS_ORIGIN_URL,
     credentials: true,
     methods: ["GET", "POST"],
   }),
@@ -16,7 +16,7 @@ app.use(
 
 app.use(
   session({
-    secret: "waldo-secre",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
   }),
