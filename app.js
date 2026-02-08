@@ -11,13 +11,6 @@ app.use(
     origin: process.env.CORS_ORIGIN_URL,
     credentials: true,
     methods: ["GET", "POST"],
-    allowedHeaders: [
-      "Origin",
-      "Content-Type",
-      "Accept",
-      "Authorization",
-      "X-Requested-With",
-    ],
   }),
 );
 
@@ -26,12 +19,6 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: {
-      sameSite: "none",
-      secure: true,
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24, // 24 hours
-    },
   }),
 );
 
