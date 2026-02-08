@@ -116,12 +116,14 @@ exports.gamePlay = async (req, res) => {
       characterName: character.name,
       timeElapsed: Number(req.session.timeElapsed),
       allCharactersFound: req.session.charactersToBeFound === 0,
+      gameStartTime: req.session.gameStartTime,
     });
   } else {
     return res.status(200).json({
       success: false,
       message: `${character.name} not found`,
       characterName: character.name,
+      gameStartTime: req.session.gameStartTime,
     });
   }
 };
