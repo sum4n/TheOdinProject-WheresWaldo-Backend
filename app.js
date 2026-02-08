@@ -11,7 +11,13 @@ app.use(
     origin: process.env.CORS_ORIGIN_URL,
     credentials: true,
     methods: ["GET", "POST"],
-    allowedHeaders: ["Origin"],
+    allowedHeaders: [
+      "Origin",
+      "Content-Type",
+      "Accept",
+      "Authorization",
+      "X-Requested-With",
+    ],
   }),
 );
 
@@ -25,7 +31,6 @@ app.use(
       secure: true,
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24, // 24 hours
-      partitioned: true,
     },
   }),
 );
