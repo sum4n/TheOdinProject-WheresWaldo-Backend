@@ -42,3 +42,10 @@ model Score {
   Gameboard   Gameboard @relation(fields: [gameboardId], references: [id])
   gameboardId Int
 }
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   @db.Text
+  expiresAt DateTime
+}
