@@ -13,6 +13,7 @@ app.use(
     origin: process.env.CORS_ORIGIN_URL,
     credentials: true,
     methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 
@@ -23,6 +24,9 @@ app.use(
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60,
+      partitioned: true,
+      secure: true,
+      sameSite: "none",
     },
     store: new PrismaSessionStore(prisma, {
       checkPeriod: 2 * 60 * 1000,
